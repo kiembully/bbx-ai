@@ -1,7 +1,7 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { PlaceholdersAndVanishInput } from './ui/placeholder-and-vanish-inputs';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const placeholders = [
   "What's the best combo for Attack type in Beyblade X?",
