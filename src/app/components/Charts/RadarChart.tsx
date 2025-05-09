@@ -68,6 +68,7 @@ const RadarVisualStats = ({ builds }: RadarVisualStatsProps) => {
       </ResponsiveContainer>
     </div>
   );
-}
+};
 
-export default RadarVisualStats;RadarVisualStats
+export default RadarVisualStats;
+RadarVisualStats;

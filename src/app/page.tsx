@@ -7,6 +7,6 @@ const Home = () => {
       <ChatHome />
     </MainLayout>
   );
-}
+};
 
 export default Home;

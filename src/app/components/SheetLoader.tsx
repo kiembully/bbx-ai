@@ -17,6 +17,6 @@ const SheetLoader = () => {
   if (loading) return <p>Loading data...</p>;
 
   return <pre>{JSON.stringify(data, null, 2)}</pre>;
-}
+};
 
 export default SheetLoader;
