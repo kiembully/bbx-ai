@@ -1,23 +1,21 @@
 import React, { FC } from 'react';
 import { BarChart as RechartsBarChart, Bar, Cell, ResponsiveContainer, LabelList } from 'recharts';
 
-// Define the StatData interface
 interface StatData {
   stat: string;
   value: number;
   fullMark: number;
 }
 
-// Define the props interface for the custom BarChart
 interface BarChartProps {
   data: StatData[];
 }
 
 const CustomBarChart: FC<BarChartProps> = ({ data }) => {
   return (
-    <div className="w-full pb-0" style={{ height: 300 }}>
+    <div className="w-full pb-0" style={{ height: 270 }}>
       <ResponsiveContainer>
-        <RechartsBarChart data={data} margin={{ top: 40, right: 20, left: 20, bottom: 0 }}>
+        <RechartsBarChart data={data} margin={{ top: 40, bottom: 0 }}>
           <Bar dataKey="value">
             {data.map((entry, index) => (
               <Cell cursor="pointer" fill={'#8884d8'} key={`cell-${index}`} />

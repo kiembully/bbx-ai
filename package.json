@@ -10,11 +10,12 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@radix-ui/react-label": "^2.1.6",
     "@tabler/icons-react": "^3.31.0",
     "axios": "^1.9.0",
     "clsx": "^2.1.1",
     "framer-motion": "^12.10.4",
-    "motion": "^12.10.4",
+    "motion": "^12.10.5",
     "next": "15.3.2",
     "openai": "^4.97.0",
     "react": "^19.0.0",

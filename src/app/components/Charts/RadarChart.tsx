@@ -47,12 +47,12 @@ export default function RadarVisualStats({ builds }: RadarVisualStatsProps) {
   const colors = ['#ff7875', '#82ca9d', '#8884d8', '#ffc658'];
 
   return (
-    <div style={{ width: '100%', height: 300 }}>
+    <div className="mb-10" style={{ width: '100%', height: 300 }}>
       <ResponsiveContainer>
-        <RadarChart outerRadius="80%" data={radarData}>
+        <RadarChart outerRadius="110%" data={radarData} margin={{ top: 60 }}>
           <PolarGrid />
           <PolarAngleAxis dataKey="stat" />
-          <PolarRadiusAxis angle={18} domain={[0, 150]} />
+          <PolarRadiusAxis angle={18} domain={[0, 150]} fontSize={10} />
           {builds.map((build, i) => (
             <Radar
               key={build.Name}
@@ -61,10 +61,9 @@ export default function RadarVisualStats({ builds }: RadarVisualStatsProps) {
               stroke={colors[i % colors.length]}
               fill={colors[i % colors.length]}
               fillOpacity={0.4}
-              fontSize={10}
             />
           ))}
-          <Legend />
+          <Legend fontSize={10} />
         </RadarChart>
       </ResponsiveContainer>
     </div>

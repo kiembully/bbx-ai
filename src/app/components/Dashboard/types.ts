@@ -20,4 +20,5 @@ export interface Build {
 
 export interface BeyPickerProps {
   build: Build;
+  name?: string;
 }
