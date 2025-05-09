@@ -28,7 +28,7 @@ const statAbbreviations: Record<string, string> = {
   Dash: 'Dsh',
 };
 
-const RadarVisualStats = ({ builds }: RadarVisualStatsProps) => {
+const RadarVisualStats: React.FC<RadarVisualStatsProps> = ({ builds }) => {
   const statKeys = Object.keys(builds[0]?.Stats || {}).filter(
     (key) => key.toLowerCase() !== 'weight'
   );
@@ -68,7 +68,6 @@ const RadarVisualStats = ({ builds }: RadarVisualStatsProps) => {
       </ResponsiveContainer>
     </div>
   );
-};
+}
 
 export default RadarVisualStats;
-RadarVisualStats;
