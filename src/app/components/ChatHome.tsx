@@ -2,6 +2,9 @@
 import { useState } from 'react';
 import { PlaceholdersAndVanishInput } from './ui/placeholder-and-vanish-inputs';
 import { motion } from 'framer-motion';
+import { HoverBorderGradient } from './ui/hover-border-gradiient';
+import { IconHammer, IconChartFunnel } from '@tabler/icons-react';
+import Link from 'next/link';
 
 const placeholders = [
   "What's the best combo for Attack type in Beyblade X?",
@@ -52,19 +55,19 @@ const ChatHome = () => {
   };
 
   return (
-    <div className='w-full' style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-      <div className="h-[40rem] flex flex-col justify-center  items-center px-4 w-full">
+    <div className="w-full">
+      <div className="flex flex-col justify-center items-center py-4 w-full min-h-screen">
         {chat.length === 0 && (
-          <h1
-            className="mb-10 sm:mb-20 text-xl text-center sm:text-5xl dark:text-white text-black"
-          >
+          <h1 className="mb-10 sm:mb-20 text-2xl text-center sm:text-5xl dark:text-white text-black">
             Ask Beyblade X Chat Assistant Anything
           </h1>
         )}
         <motion.div
-          className="w-full"
-          style={{ whiteSpace: 'pre-wrap', marginBottom: '1rem' }}
-          animate={{ height: chat.length > 0 ? '100%' : 'auto' }}
+          className="w-full whitespace-pre-wrap mb-4"
+          animate={{
+            height: chat.length > 0 ? '100%' : 'auto',
+            flex: chat.length > 0 ? 'auto' : 'none',
+          }}
           transition={{ duration: 0.3, ease: 'easeInOut' }}
         >
           {chat.map((line, i) => (
@@ -91,25 +94,60 @@ const ChatHome = () => {
               </div>
             </div>
           ))}
-          {loading &&
-            <div className='justify-items-end text-right'>
+          {loading && (
+            <div className="justify-items-end text-right">
               <div className="flex flex-row gap-2">
                 <div className="w-2 h-2 rounded-full bg-blue-500 animate-bounce"></div>
-                <div
-                  className="w-2 h-2 rounded-full bg-blue-500 animate-bounce [animation-delay:-.3s]"
-                ></div>
-                <div
-                  className="w-2 h-2 rounded-full bg-blue-500 animate-bounce [animation-delay:-.5s]"
-                ></div>
+                <div className="w-2 h-2 rounded-full bg-blue-500 animate-bounce [animation-delay:-.3s]"></div>
+                <div className="w-2 h-2 rounded-full bg-blue-500 animate-bounce [animation-delay:-.5s]"></div>
               </div>
             </div>
-          }
+          )}
         </motion.div>
         <PlaceholdersAndVanishInput
           placeholders={placeholders}
           onChange={handleChange}
           onSubmit={onSubmit}
         />
+        <div className="flex gap-4 items-center justify-center mt-4">
+          <HoverBorderGradient className="flex gap-2 cursor-pointer bg-white text-neutral-800 opacity-90 hover:opacity-100 duration-100">
+            <Link href="/collections" className="flex gap-2 relative">
+              {/* Animated Hammer Icon with a continuous movement */}
+              <motion.div
+                animate={{
+                  rotate: [0, -15, 10, -10, 0], // Continuous rotation
+                }}
+                transition={{
+                  duration: 2, // 5-second interval
+                  repeat: Infinity, // Repeat indefinitely
+                  repeatType: 'loop', // Ensure the animation loops
+                  ease: 'easeInOut', // Smooth easing
+                }}
+              >
+                <IconChartFunnel stroke={2} />
+              </motion.div>
+              <span>Collections</span>
+            </Link>
+          </HoverBorderGradient>
+          <HoverBorderGradient className="flex gap-2 cursor-pointer opacity-90 hover:opacity-100 duration-100">
+            <Link href="/dashboard" className="flex gap-2 relative">
+              <motion.div
+                animate={{
+                  rotate: [0, -15, 10, -10, 0], // Continuous rotation
+                }}
+                transition={{
+                  duration: 2, // 5-second interval
+                  repeat: Infinity, // Repeat indefinitely
+                  repeatType: 'loop', // Ensure the animation loops
+                  ease: 'easeInOut', // Smooth easing
+                }}
+              >
+                <IconHammer stroke={2} />
+              </motion.div>
+              <span>Bey Simulator</span>
+            </Link>
+          </HoverBorderGradient>
+        </div>
       </div>
     </div>
   );
