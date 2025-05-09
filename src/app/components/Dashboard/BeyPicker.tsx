@@ -16,8 +16,7 @@ const BeyPicker: FC<BeyPickerProps> = ({ build, name }) => {
 
   const fetchParts = async (type: string) => {
     setLoading(true);
-    const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-    const url = `${baseUrl}/api/${type.toLowerCase()}`;
+    const url = `/api/${type.toLowerCase()}`;
     try {
       const response = await axios.get(url);
       setParts(response.data.rows);
