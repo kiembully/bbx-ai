@@ -1,7 +1,7 @@
 // components/SheetLoader.tsx
 import { useEffect, useState } from 'react';
 
-export default function SheetLoader() {
+const SheetLoader = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -18,3 +18,5 @@ export default function SheetLoader() {
 
   return <pre>{JSON.stringify(data, null, 2)}</pre>;
 }
+
+export default SheetLoader;

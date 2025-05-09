@@ -1,10 +1,12 @@
 import MainLayout from './layouts/MainLayout';
 import ChatHome from './components/ChatHome';
 
-export default function Home() {
+const Home = () => {
   return (
     <MainLayout>
       <ChatHome />
     </MainLayout>
   );
 }
+
+export default Home;

@@ -17,14 +17,16 @@ export const metadata: Metadata = {
   description: 'A tool for Beyblade X enthusiasts to get optimal combos and part functions.',
 };
 
-export default function RootLayout({
+const RootLayout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>) => {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
     </html>
   );
 }
+
+export default RootLayout;

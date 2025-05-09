@@ -28,7 +28,7 @@ const statAbbreviations: Record<string, string> = {
   Dash: 'Dsh',
 };
 
-export default function RadarVisualStats({ builds }: RadarVisualStatsProps) {
+const RadarVisualStats = ({ builds }: RadarVisualStatsProps) => {
   const statKeys = Object.keys(builds[0]?.Stats || {}).filter(
     (key) => key.toLowerCase() !== 'weight'
   );
@@ -69,3 +69,5 @@ export default function RadarVisualStats({ builds }: RadarVisualStatsProps) {
     </div>
   );
 }
+
+export default RadarVisualStats;RadarVisualStats
