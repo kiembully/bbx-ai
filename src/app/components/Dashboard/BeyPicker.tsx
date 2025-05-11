@@ -90,7 +90,7 @@ const BeyPicker: FC<BeyPickerProps> = ({ build, name }) => {
       parts = 'bit';
     }
 
-    handlePartSelect(parts as 'blade' | 'ratchet' | 'bit', item, 'my');
+    handlePartSelect(parts as 'blade' | 'ratchet' | 'bit', item, name === 'Opponent' ? 'opponent' : 'my');
   };
 
   return (
