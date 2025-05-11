@@ -6,9 +6,10 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   children: ReactNode;
+  fullView?: boolean;
 }
 
-const Modal: FC<ModalProps> = ({ isOpen, onClose, children }) => {
+const Modal: FC<ModalProps> = ({ isOpen, onClose, children, fullView }) => {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -20,7 +21,7 @@ const Modal: FC<ModalProps> = ({ isOpen, onClose, children }) => {
           onClick={onClose}
         >
           <motion.div
-            className="bg-white dark:bg-neutral-900 rounded-2xl shadow-xl p-6 w-full max-w-[80%] md:max-w-[60%]"
+            className={`bg-white dark:bg-neutral-900 rounded-2xl shadow-xl p-6 w-full ${fullView ? 'h-screen' : 'max-w-[80%] md:max-w-[60%]'}`}
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}

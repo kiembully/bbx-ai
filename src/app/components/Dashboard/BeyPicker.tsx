@@ -1,33 +1,30 @@
 'use client';
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { IconFlareFilled, IconLabelFilled, IconWindmillFilled } from '@tabler/icons-react';
 import { BeyPickerProps } from './types';
 import Modal from '../Shared/Modal/Modal';
 import { CardHover } from '../Shared/Cards/Cards';
 import { PlaceholdersAndVanishInput } from '../ui/placeholder-and-vanish-inputs';
-import axios from 'axios';
+import { useBeyDataStore } from '@/store/useBeyDataStore';
+import { Bit, Blade, Ratchet } from '@/model/collections';
+import { BeyPart, useBeyBattleStore } from '@/store/useBeyBattleStore';
 
 const BeyPicker: FC<BeyPickerProps> = ({ build, name }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [modalLabel, setModalLabel] = useState('');
   const [modalType, setModalType] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [parts, setParts] = useState<unknown[]>([]);
+  const [parts, setParts] = useState<Blade[] | Ratchet[] | Bit[]>([]);
+  const { blades, ratchets, bits, loading } = useBeyDataStore();
 
-  const fetchParts = async (type: string) => {
-    setLoading(true);
-    const url = `/api/${type.toLowerCase()}`;
-    try {
-      const response = await axios.get(url);
-      setParts(response.data.rows);
-      setLoading(false);
-      return response.data;
-    } catch (error) {
-      console.error(`Error fetching ${type}:`, error);
-      setLoading(false);
-      return [];
+  useEffect(() => {
+    if (modalType === 'Blades') {
+      setParts(blades);
+    } else if (modalType === 'Ratchet') {
+      setParts(ratchets);
+    } else if (modalType === 'Bits') {
+      setParts(bits);
     }
-  };
+  }, [modalType, blades, ratchets, bits]);
 
   const handleOpenDialog = async ({
     label,
@@ -41,7 +38,7 @@ const BeyPicker: FC<BeyPickerProps> = ({ build, name }) => {
     setIsOpen(isOpen);
     setModalLabel(label);
     setModalType(type);
-    await fetchParts(type);
+    // await fetchParts(type);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,6 +50,49 @@ const BeyPicker: FC<BeyPickerProps> = ({ build, name }) => {
 
   const placeholders = [`Search for ${modalType}'s name . . .`];
 
+  const handlePartSelect = (
+    partType: 'blade' | 'ratchet' | 'bit',
+    part: BeyPart,
+    side: 'my' | 'opponent'
+  ) => {
+    const setPart =
+      side === 'my'
+        ? useBeyBattleStore.getState().setMyBeyPart
+        : useBeyBattleStore.getState().setOpponentBeyPart;
+
+    const combo =
+      side === 'my' ? useBeyBattleStore.getState().myBey : useBeyBattleStore.getState().opponentBey;
+
+    // Set the selected part
+    setPart(partType, part);
+
+    // Check if all parts are now selected
+    const updatedCombo = { ...combo, [partType]: part };
+    const isComplete = updatedCombo.blade && updatedCombo.ratchet && updatedCombo.bit;
+
+    if (isComplete) {
+      console.log(`✅ ${side === 'my' ? 'My BeyBlade' : 'Opponent'} is ready:`, updatedCombo);
+      // Optionally trigger animation, save, or compare now
+    } else {
+      console.log(`❌ ${side === 'my' ? 'My BeyBlade' : 'Opponent'} is not ready yet.`);
+    }
+  };
+
+  const handleSelectCard = (item: { Name: string }) => {
+    let parts = '';
+    if (modalType === 'Blades') {
+      parts = 'blade';
+    }
+    if (modalType === 'Ratchet') {
+      parts = 'ratchet';
+    }
+    if (modalType === 'Bits') {
+      parts = 'bit';
+    }
+
+    handlePartSelect(parts as 'blade' | 'ratchet' | 'bit', item, 'my');
+  };
+
   return (
     name && (
       <>
@@ -63,7 +103,7 @@ const BeyPicker: FC<BeyPickerProps> = ({ build, name }) => {
           >
             <div className={`flex items-center gap-2 p-4 flex-row`}>
               <IconWindmillFilled className={`text-neutral-200 h-10 w-10`} />
-              <span className="text-neutral-200">Pick Blade</span>
+              <span className="text-neutral-200">{build && build.Parts.Blade}</span>
             </div>
           </div>
           <div
@@ -72,7 +112,7 @@ const BeyPicker: FC<BeyPickerProps> = ({ build, name }) => {
           >
             <div className={`flex items-center gap-2 p-4 flex-row`}>
               <IconFlareFilled className={`text-neutral-200 h-10 w-10`} />
-              <span className="text-neutral-200">Pick Ratchet</span>
+              <span className="text-neutral-200">{build && build.Parts.Ratchet}</span>
             </div>
           </div>
           <div
@@ -81,7 +121,7 @@ const BeyPicker: FC<BeyPickerProps> = ({ build, name }) => {
           >
             <div className={`flex items-center gap-2 p-4 flex-row`}>
               <IconLabelFilled className={`text-neutral-200 h-10 w-10 rotate-90`} />
-              <span className="text-neutral-200">Pick Bit</span>
+              <span className="text-neutral-200">{build ? build.Parts.Bit : 'Pick a Bit'}</span>
             </div>
           </div>
         </div>
@@ -101,8 +141,8 @@ const BeyPicker: FC<BeyPickerProps> = ({ build, name }) => {
           </div>
         </div>
 
-        <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-          <div className="flex flex-col">
+        <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} fullView={true}>
+          <div className="flex flex-col h-full">
             <h2 className="text-xl font-semibold mb-2 text-center">
               {modalLabel === 'Opponent'
                 ? `Pick Opponent's ${modalType}`
@@ -113,8 +153,23 @@ const BeyPicker: FC<BeyPickerProps> = ({ build, name }) => {
               onChange={handleChange}
               onSubmit={onSubmit}
             />
-            <div className="h-[400px] md:h-[600px] overflow-y-auto">
-              <CardHover data={parts} loading={loading} />
+            <div className="flex-1 overflow-y-auto my-10">
+              <CardHover
+                data={parts}
+                loading={loading}
+                variant="selectable"
+                onSelect={handleSelectCard}
+              />
+            </div>
+            <div className="w-full gap-4 flex items-center justify-center">
+              {/* <button type='button' className='py-2 px-4 cursor-pointer'>Select</button> */}
+              <button
+                type="button"
+                className="py-2 px-4 cursor-pointer"
+                onClick={() => setIsOpen(false)}
+              >
+                Close
+              </button>
             </div>
           </div>
         </Modal>

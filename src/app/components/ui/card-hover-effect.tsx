@@ -1,12 +1,14 @@
 import { cn } from '@/app/lib/utils';
 import { AnimatePresence, motion } from 'motion/react';
-
 import { useState } from 'react';
 
 export const HoverEffect = ({
   items,
   className,
   loading,
+  variant = 'default', // 'default' | 'selectable'
+  onSelect,
+  selectedItem = null,
 }: {
   items: {
     Name: string;
@@ -15,23 +17,43 @@ export const HoverEffect = ({
   }[];
   className?: string;
   loading?: boolean;
+  variant?: 'default' | 'selectable';
+  onSelect?: (item: { Name: string }) => void;
+  selectedItem?: { Name: string } | null;
 }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
+  const handleClick = (item: { Name: string }) => {
+    if (variant === 'selectable' && typeof onSelect === 'function') {
+      onSelect(item);
+    }
+  };
+
   return (
-    <div className={cn('grid grid-cols-1 md:grid-cols-2  lg:grid-cols-3  py-10', className)}>
+    <div className={cn('flex flex-wrap', className)}>
       {items.map((item, idx) => (
-        <a
-          href={item?.Name || '#'}
+        <div
           key={item?.Name}
-          className="relative group  block p-2 h-full w-full"
+          className="relative group block p-2 h-full w-full max-w-[400px] mx-auto cursor-pointer"
           onMouseEnter={() => setHoveredIndex(idx)}
           onMouseLeave={() => setHoveredIndex(null)}
+          onClick={() => handleClick(item)}
         >
+          {variant === 'selectable' && (
+            <div
+              className={cn(
+                'h-6 w-6 rounded-full absolute top-6 right-6 z-30 border-2',
+                selectedItem?.Name === item.Name
+                  ? 'bg-green-700 border-grey-400'
+                  : 'bg-black border-gray-400'
+              )}
+            />
+          )}
+
           <AnimatePresence>
             {hoveredIndex === idx && (
               <motion.span
-                className="absolute inset-0 h-full w-full bg-neutral-200 dark:bg-slate-800/[0.8] block  rounded-3xl"
+                className="absolute inset-0 h-full w-full bg-neutral-200 dark:bg-slate-800/[0.8] block rounded-3xl"
                 layoutId="hoverBackground"
                 initial={{ opacity: 0 }}
                 animate={{
@@ -45,6 +67,7 @@ export const HoverEffect = ({
               />
             )}
           </AnimatePresence>
+
           <Card>
             <div
               className={cn(
@@ -64,14 +87,13 @@ export const HoverEffect = ({
             </div>
             <CardTitle>
               {loading ? (
-                <div className="h-2.5 animate-pulse bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4"></div>
+                <div className="h-2.5 animate-pulse bg-gray-200 rounded-full dark:bg-gray-700 w-1/2 mb-4"></div>
               ) : (
                 item.Name
               )}
             </CardTitle>
-            {/* <CardDescription>{item.description}</CardDescription> */}
           </Card>
-        </a>
+        </div>
       ))}
     </div>
   );
@@ -97,6 +119,7 @@ export const Card = ({
     </div>
   );
 };
+
 export const CardTitle = ({
   className,
   children,
@@ -108,6 +131,7 @@ export const CardTitle = ({
     <h4 className={cn('text-zinc-100 font-bold tracking-wide mt-4', className)}>{children}</h4>
   );
 };
+
 export const CardDescription = ({
   className,
   children,

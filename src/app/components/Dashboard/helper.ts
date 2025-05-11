@@ -12,6 +12,7 @@ export const convertBuildStatsToRadarData = (stats: Record<string, number>): Sta
     switch (key.toLowerCase()) {
       case 'weight':
         fullMark = 120;
+        value = parseFloat(value.toFixed(1));
         break;
       default:
         fullMark = 100;

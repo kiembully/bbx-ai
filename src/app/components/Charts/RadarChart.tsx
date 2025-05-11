@@ -68,6 +68,6 @@ const RadarVisualStats: React.FC<RadarVisualStatsProps> = ({ builds }) => {
       </ResponsiveContainer>
     </div>
   );
-}
+};
 
 export default RadarVisualStats;
