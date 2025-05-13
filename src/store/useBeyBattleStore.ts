@@ -14,7 +14,7 @@ export interface BeyPart {
   Dash?: number;
 }
 
-interface BeyCombo {
+export interface BeyCombo {
   blade: BeyPart | null;
   ratchet: BeyPart | null;
   bit: BeyPart | null;
@@ -26,6 +26,25 @@ interface BeyBattleState {
   setMyBeyPart: (type: keyof BeyCombo, part: BeyPart) => void;
   setOpponentBeyPart: (type: keyof BeyCombo, part: BeyPart) => void;
   resetBattle: () => void;
+}
+export interface FullBeyblade {
+  Name: string;
+  Spin: string | 'R' | 'L'; // or string if there are other values
+  Series: string;
+  Type: 'Attack' | 'Defense' | 'Stamina' | string;
+  Parts: {
+    Blade: string;
+    Ratchet: string;
+    Bit: string;
+  };
+  Stats: {
+    Attack: number;
+    Defense: number;
+    Stamina: number;
+    Burst: number;
+    Dash: number;
+    Weight: number;
+  };
 }
 
 export const useBeyBattleStore = create<BeyBattleState>((set) => ({

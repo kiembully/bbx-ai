@@ -1,6 +1,6 @@
 export interface Build {
   Name: string;
-  Spin: 'R' | 'L'; // Assuming only Right or Left spin
+  Spin: string | 'R' | 'L'; // Assuming only Right or Left spin
   Series: string;
   Type: 'Attack' | 'Defense' | 'Stamina' | string; // Extendable
   Parts: {

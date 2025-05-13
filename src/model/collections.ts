@@ -7,6 +7,7 @@ export interface Blade {
   Spin: string;
   Series: string;
   Type: string;
+  Image?: string;
 }
 
 export interface Ratchet {

@@ -1,12 +1,11 @@
 'use client';
-
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Builder from '@/app/components/Dashboard/Builder/Builder';
-import Simulator from '@/app/components/Dashboard/Simulator';
 import DashboardLayout from '@/app/layouts/DashboardLayout';
 import { useBeyDataStore } from '@/store/useBeyDataStore';
-import { useBeyBattleStore } from '@/store/useBeyBattleStore';
+import { BeyCombo, FullBeyblade, useBeyBattleStore } from '@/store/useBeyBattleStore';
+import Simulator from '@/app/components/Dashboard/Simulator/Simulator';
 
 const tabs = ['Builder 1', 'Builder 2', 'Simulator'];
 
@@ -15,8 +14,7 @@ const Dashboard = () => {
   const { fetchBeyData } = useBeyDataStore();
   const { myBey, opponentBey } = useBeyBattleStore();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const convertCombo = ({ blade, ratchet, bit }: any) => {
+  const convertCombo = ({ blade, ratchet, bit }: BeyCombo): FullBeyblade => {
     return {
       Name: `${blade?.Name} / ${ratchet?.Name} / ${bit?.Name}`,
       Spin: blade?.Spin || '',

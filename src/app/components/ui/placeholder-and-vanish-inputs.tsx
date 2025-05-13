@@ -8,10 +8,12 @@ export function PlaceholdersAndVanishInput({
   placeholders,
   onChange,
   onSubmit,
+  newValue,
 }: {
   placeholders: string[];
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  onSubmit?: (e: React.FormEvent<HTMLFormElement>) => void;
+  newValue?: string;
 }) {
   const [currentPlaceholder, setCurrentPlaceholder] = useState(0);
 
@@ -93,6 +95,9 @@ export function PlaceholdersAndVanishInput({
 
   useEffect(() => {
     draw();
+    if (newValue) {
+      setValue(newValue);
+    }
   }, [value, draw]);
 
   const animate = (start: number) => {

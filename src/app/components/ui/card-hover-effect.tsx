@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
 import { Build } from '../Dashboard/types';
 import { HoverBorderGradient } from './hover-border-gradiient';
+import NextImage from '../Shared/NextImage/NextImage';
 
 export const HoverEffect = ({
   items,
@@ -11,10 +12,11 @@ export const HoverEffect = ({
   variant = 'default', // 'default' | 'selectable'
   onSelect,
   build,
+  type,
 }: {
   items: {
     Name: string;
-    image?: string;
+    Image?: string;
     link?: string;
   }[];
   className?: string;
@@ -22,6 +24,7 @@ export const HoverEffect = ({
   variant?: 'default' | 'selectable';
   onSelect?: (item: { Name: string }) => void;
   build?: Build;
+  type?: string;
 }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
@@ -31,12 +34,26 @@ export const HoverEffect = ({
     }
   };
 
+  const handleCardImage = (type: string) => {
+    switch (type) {
+      case 'Blades': {
+        return 'blade';
+      }
+      case 'Ratchet': {
+        return 'ratchet';
+      }
+      default: {
+        return 'bit';
+      }
+    }
+  };
+
   return (
     <div className={cn('flex flex-wrap', className)}>
       {items.map((item, idx) => (
         <div
           key={item?.Name}
-          className="relative group block p-2 h-full w-full max-w-[400px] mx-auto cursor-pointer"
+          className="relative group block p-2 h-full w-full max-w-[350px] mx-auto cursor-pointer"
           onMouseEnter={() => setHoveredIndex(idx)}
           onMouseLeave={() => setHoveredIndex(null)}
           onClick={() => handleClick(item)}
@@ -71,22 +88,24 @@ export const HoverEffect = ({
           </AnimatePresence>
 
           <Card>
-            <div
-              className={cn(
-                'flex items-center justify-center w-full h-48 bg-gray-700',
-                loading && 'animate-pulse'
-              )}
-            >
-              <svg
-                className="w-full h-10 text-gray-200 dark:text-gray-600"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 20 18"
-              >
-                <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
-              </svg>
-            </div>
+            {item.Image ? (
+              <NextImage
+                src={item.Image}
+                alt="Parts image"
+                fill
+                className="z-10 absolute object-fit overflow-hidden"
+                containerClass="relative w-40 h-40 mx-auto"
+              />
+            ) : (
+              <NextImage
+                src={`/assets/unlocked-${type ? handleCardImage(type) : 'blade'}.png`}
+                alt="Parts placeholder image"
+                height={300}
+                width={300}
+                className="z-10 relative w-full rounded-lg overflow-hidden"
+                containerClass="relative w-54 h-54 mx-auto"
+              />
+            )}
             <div className="flex flex-col sm:flex-row justify-between items-center mt-4 gap-y-2 sm:gap-y-0">
               <CardTitle>
                 {loading ? (
@@ -96,7 +115,7 @@ export const HoverEffect = ({
                 )}
               </CardTitle>
               <HoverBorderGradient
-                className="flex gap-2 cursor-pointer bg-white text-neutral-800 opacity-90 hover:opacity-100 duration-100 p-2"
+                className="flex gap-2 cursor-pointer text-neutral-800 opacity-90 hover:opacity-100 duration-100 bg-sky-500 px-2 py-1"
                 onClick={(e) => {
                   e.stopPropagation();
                 }}

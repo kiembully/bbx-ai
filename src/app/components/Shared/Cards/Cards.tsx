@@ -18,6 +18,7 @@ export const CardHover: React.FC<CardHoverProps> = ({
   variant,
   onSelect,
   build,
+  type,
 }) => {
   const handleClick = (item: { Name: string }) => {
     onSelect?.(item);
@@ -31,6 +32,7 @@ export const CardHover: React.FC<CardHoverProps> = ({
         variant={variant}
         onSelect={(item) => handleClick(item)}
         build={build}
+        type={type}
       />
     </div>
   );

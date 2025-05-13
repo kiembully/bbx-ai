@@ -8,12 +8,15 @@ import { PlaceholdersAndVanishInput } from '../ui/placeholder-and-vanish-inputs'
 import { useBeyDataStore } from '@/store/useBeyDataStore';
 import { Bit, Blade, Ratchet } from '@/model/collections';
 import { BeyPart, useBeyBattleStore } from '@/store/useBeyBattleStore';
+import { IconX } from '@tabler/icons-react';
 
 const BeyPicker: FC<BeyPickerProps> = ({ build, name, picking }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [modalLabel, setModalLabel] = useState('');
   const [modalType, setModalType] = useState('');
   const [parts, setParts] = useState<Blade[] | Ratchet[] | Bit[]>([]);
+  const [filteredParts, setFilteredParts] = useState<Blade[] | Ratchet[] | Bit[]>(parts);
+  const [fiterValue, setFilterValue] = useState<string>('');
   const { blades, ratchets, bits, loading } = useBeyDataStore();
 
   useEffect(() => {
@@ -42,13 +45,35 @@ const BeyPicker: FC<BeyPickerProps> = ({ build, name, picking }) => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-  };
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    const query = e.target.value.toLowerCase();
+    setFilterValue(e.target.value);
+    // Get all available parts based on modalType
+    let allParts: Blade[] | Ratchet[] | Bit[] = [];
+    if (modalType === 'Blades') {
+      allParts = blades;
+    } else if (modalType === 'Ratchet') {
+      allParts = ratchets;
+    } else if (modalType === 'Bits') {
+      allParts = bits;
+    }
+
+    // Filter logic: check if any string field contains the query
+    const filtered = allParts.filter((part) =>
+      Object.values(part).some(
+        (val) => typeof val === 'string' && val.toLowerCase().includes(query)
+      )
+    );
+
+    setFilteredParts(filtered);
   };
 
-  const placeholders = [`Search for ${modalType}'s name . . .`];
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setFilterValue('');
+    setFilteredParts(parts);
+  };
+
+  const placeholders = [`Search for ${modalType}'${modalType !== 'Blades' ? 's' : ''} name . . .`];
 
   const handlePartSelect = (
     partType: 'blade' | 'ratchet' | 'bit',
@@ -79,24 +104,46 @@ const BeyPicker: FC<BeyPickerProps> = ({ build, name, picking }) => {
   };
 
   const handleSelectCard = (item: { Name: string }) => {
-    let parts = '';
+    let newParts = '';
     if (modalType === 'Blades') {
-      parts = 'blade';
+      newParts = 'blade';
     }
     if (modalType === 'Ratchet') {
-      parts = 'ratchet';
+      newParts = 'ratchet';
     }
     if (modalType === 'Bits') {
-      parts = 'bit';
+      newParts = 'bit';
     }
 
     handlePartSelect(
-      parts as 'blade' | 'ratchet' | 'bit',
+      newParts as 'blade' | 'ratchet' | 'bit',
       item,
       name === 'Opponent' ? 'opponent' : 'my'
     );
     setIsOpen(false);
+    setFilterValue('');
+    setFilteredParts(parts);
   };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    setFilteredParts(parts);
+  }, [parts]);
 
   return (
     name && (
@@ -181,7 +228,7 @@ const BeyPicker: FC<BeyPickerProps> = ({ build, name, picking }) => {
         </div>
 
         <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} fullView={true}>
-          <div className="flex flex-col h-full">
+          <div className="flex flex-col h-full relative p-4">
             <h2 className="text-xl font-semibold mb-2 text-center">
               {modalLabel === 'Opponent'
                 ? `Pick Opponent's ${modalType}`
@@ -190,11 +237,12 @@ const BeyPicker: FC<BeyPickerProps> = ({ build, name, picking }) => {
             <PlaceholdersAndVanishInput
               placeholders={placeholders}
               onChange={handleChange}
+              newValue={fiterValue}
               onSubmit={onSubmit}
             />
             <div className="flex-1 overflow-y-auto my-10">
               <CardHover
-                data={parts}
+                data={filteredParts}
                 loading={loading}
                 variant="selectable"
                 onSelect={handleSelectCard}
@@ -202,16 +250,13 @@ const BeyPicker: FC<BeyPickerProps> = ({ build, name, picking }) => {
                 type={modalType}
               />
             </div>
-            <div className="w-full gap-4 flex items-center justify-center">
-              {/* <button type='button' className='py-2 px-4 cursor-pointer'>Select</button> */}
-              <button
-                type="button"
-                className="py-2 px-4 cursor-pointer"
-                onClick={() => setIsOpen(false)}
-              >
-                Close
-              </button>
-            </div>
+            <button
+              type="button"
+              className="p-2 rounded-full bg-neutral-500 opacity-80 hover:opacity-100 cursor-pointer duration-100 absolute top-2 right-2"
+              onClick={() => setIsOpen(false)}
+            >
+              <IconX stroke={2} className="h-4 w-4" />
+            </button>
           </div>
         </Modal>
       </>
