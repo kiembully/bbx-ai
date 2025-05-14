@@ -58,7 +58,7 @@ const ChatHome = () => {
     <div className="w-full">
       <div className="flex flex-col justify-center items-center py-4 w-full min-h-screen">
         {chat.length === 0 && (
-          <h1 className="mb-10 sm:mb-20 text-2xl text-center sm:text-5xl">
+          <h1 className="mb-10 sm:mb-20 text-2xl text-center sm:text-5xl dark:text-white text-black">
             Ask Beyblade X Chat Assistant Anything
           </h1>
         )}
@@ -76,7 +76,6 @@ const ChatHome = () => {
               style={{
                 textAlign: i % 2 === 0 ? 'right' : 'left',
                 margin: '1rem 0',
-                color: i % 2 === 0 ? '#000' : '#000',
                 maxWidth: '100%',
               }}
             >
@@ -84,11 +83,10 @@ const ChatHome = () => {
                 style={{
                   backgroundColor: i % 2 === 0 ? '#323232' : 'transparent',
                   borderRadius: '50px',
-                  color: '#fff',
                   padding: '1rem',
-                  width: i % 2 === 0 ? 'full' : 'fit-content',
+                  width: i % 2 === 0 ? 'full' : 'fit-content'
                 }}
-                className={i % 2 === 0 ? 'justify-self-end' : 'justify-self-start'}
+                className={i % 2 === 0 ? 'justify-self-end text-white' : 'justify-self-start text-black dark:text-white'}
               >
                 {line}
               </div>
