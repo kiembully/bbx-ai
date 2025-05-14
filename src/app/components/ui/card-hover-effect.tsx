@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Build } from '../Dashboard/types';
 import { HoverBorderGradient } from './hover-border-gradiient';
 import NextImage from '../Shared/NextImage/NextImage';
+import { IconEye } from '@tabler/icons-react';
 
 export const HoverEffect = ({
   items,
@@ -36,7 +37,7 @@ export const HoverEffect = ({
 
   const handleCardImage = (type: string) => {
     switch (type) {
-      case 'Blades': {
+      case 'Blade': {
         return 'blade';
       }
       case 'Ratchet': {
@@ -53,7 +54,7 @@ export const HoverEffect = ({
       {items.map((item, idx) => (
         <div
           key={item?.Name}
-          className="relative group block p-2 h-full w-full max-w-[350px] mx-auto cursor-pointer"
+          className="relative group block p-2 h-full w-full max-w-full md:max-w-[350px] mx-auto cursor-pointer"
           onMouseEnter={() => setHoveredIndex(idx)}
           onMouseLeave={() => setHoveredIndex(null)}
           onClick={() => handleClick(item)}
@@ -61,7 +62,7 @@ export const HoverEffect = ({
           {variant === 'selectable' && (
             <div
               className={cn(
-                'h-6 w-6 rounded-full absolute top-6 right-6 z-30 border-2',
+                'h-[18px] md:h-4 w-[18px] md:w-4 rounded-full absolute top-4 md:top-6 right-4 md:right-6 z-30 border-2',
                 build?.Name.includes(item.Name)
                   ? 'bg-green-700 border-grey-400'
                   : 'bg-black border-gray-400'
@@ -94,7 +95,7 @@ export const HoverEffect = ({
                 alt="Parts image"
                 fill
                 className="z-10 absolute object-fit overflow-hidden"
-                containerClass="relative w-40 h-40 mx-auto"
+                containerClass="relative w-20 md:w-40 h-20 md:h-40 md:mx-auto"
               />
             ) : (
               <NextImage
@@ -103,11 +104,11 @@ export const HoverEffect = ({
                 height={300}
                 width={300}
                 className="z-10 relative w-full rounded-lg overflow-hidden"
-                containerClass="relative w-54 h-54 mx-auto"
+                containerClass="relative w-40 h-40 mx-auto"
               />
             )}
-            <div className="flex flex-col sm:flex-row justify-between items-center mt-4 gap-y-2 sm:gap-y-0">
-              <CardTitle>
+            <div className="flex gap-2 justify-between items-center w-full mt-0 md:mt-4">
+              <CardTitle className="text-sm md:text-xl">
                 {loading ? (
                   <div className="h-2.5 animate-pulse bg-gray-200 rounded-full dark:bg-gray-700 w-1/2 mb-4"></div>
                 ) : (
@@ -120,7 +121,8 @@ export const HoverEffect = ({
                   e.stopPropagation();
                 }}
               >
-                View Specs
+                <div className="hidden md:flex">View</div>
+                <IconEye stroke={2} />
               </HoverBorderGradient>
             </div>
           </Card>
@@ -145,7 +147,7 @@ export const Card = ({
       )}
     >
       <div className="relative z-50">
-        <div className="p-4">{children}</div>
+        <div className="p-0 md:p-4 flex md:block w-full justify-between gap-2">{children}</div>
       </div>
     </div>
   );

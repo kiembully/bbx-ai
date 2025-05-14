@@ -42,8 +42,9 @@ const ResultsDisplay = () => {
       <div className="flex flex-col gap-4">
         <div className="flex flex-col">
           <h3 className="mb-4 text-lg font-bold">{results.bey1Name}</h3>
-          <p className='flex justify-between w-full'>
-            <span>Win Percentage:</span> {results.bey1WinPercentage}%</p>
+          <p className="flex justify-between w-full">
+            <span>Win Percentage:</span> {results.bey1WinPercentage}%
+          </p>
           <div className="flex flex-col">
             <div className="flex justify-between w-full">
               <span>KO Wins:</span> {results.outcomeDetails.bey1.KO.toFixed(1)}%

@@ -16,6 +16,11 @@ export interface Build {
     Dash: number;
     Weight: number;
   };
+  Images: {
+    Blade?: string;
+    Ratchet?: string;
+    Bit?: string;
+  };
 }
 
 export interface BeyPickerProps {

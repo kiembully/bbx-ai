@@ -12,6 +12,7 @@ export interface BeyPart {
   Type?: string;
   Burst?: number;
   Dash?: number;
+  Image?: string;
 }
 
 export interface BeyCombo {
@@ -44,6 +45,11 @@ export interface FullBeyblade {
     Burst: number;
     Dash: number;
     Weight: number;
+  };
+  Images: {
+    Blade?: string;
+    Ratchet?: string;
+    Bit?: string;
   };
 }
 

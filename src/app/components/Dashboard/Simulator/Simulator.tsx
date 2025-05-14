@@ -24,8 +24,17 @@ const Versus: React.FC<SimulatorProps> = ({ build, versus }) => {
           <RadarVisualStats builds={[build, versus]} isLoading={isLoading} />
         </div>
         <div className="flex flex-col gap-2 mb-2 items-center">
-          <div className="text-md font-semibold text-[#ff7875]">{build.Name}</div>
-          <div className="text-md font-semibold text-[#82ca9d]">{versus.Name}</div>
+          {isLoading ? (
+            <>
+              <div className="h-4 animate-pulse bg-gray-200 rounded-full dark:bg-gray-700 w-1/2 mb-2"></div>
+              <div className="h-4 animate-pulse bg-gray-200 rounded-full dark:bg-gray-700 w-1/2"></div>
+            </>
+          ) : (
+            <>
+              <div className="text-md font-semibold text-[#ff7875]">{build.Name}</div>
+              <div className="text-md font-semibold text-[#82ca9d]">{versus.Name}</div>
+            </>
+          )}
         </div>
         <hr className="mx-4" />
         <ResultsDisplay />

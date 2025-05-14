@@ -16,6 +16,7 @@ export interface Ratchet {
   Defense: string;
   Stamina: string;
   Weight: string;
+  Image?: string;
 }
 
 export interface Bit {
@@ -27,6 +28,7 @@ export interface Bit {
   Burst: string;
   Dash: string;
   Weight: string;
+  Image?: string;
 }
 
 export interface BeyDataState {

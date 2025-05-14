@@ -1,11 +1,39 @@
 'use client';
-import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useMemo, useState } from 'react';
 import Builder from '@/app/components/Dashboard/Builder/Builder';
 import DashboardLayout from '@/app/layouts/DashboardLayout';
 import { useBeyDataStore } from '@/store/useBeyDataStore';
 import { BeyCombo, FullBeyblade, useBeyBattleStore } from '@/store/useBeyBattleStore';
 import Simulator from '@/app/components/Dashboard/Simulator/Simulator';
+
+const convertCombo = ({ blade, ratchet, bit }: BeyCombo): FullBeyblade => {
+  return {
+    Name: `${blade?.Name} / ${ratchet?.Name} / ${bit?.Name}`,
+    Spin: blade?.Spin || '',
+    Series: blade?.Series || '',
+    Type: blade?.Type || '',
+    Parts: {
+      Blade: blade?.Name || '',
+      Ratchet: ratchet?.Name || '',
+      Bit: bit?.Name || '',
+    },
+    Stats: {
+      Attack: Number(blade?.Attack || 0) + Number(ratchet?.Attack || 0) + Number(bit?.Attack || 0),
+      Defense:
+        Number(blade?.Defense || 0) + Number(ratchet?.Defense || 0) + Number(bit?.Defense || 0),
+      Stamina:
+        Number(blade?.Stamina || 0) + Number(ratchet?.Stamina || 0) + Number(bit?.Stamina || 0),
+      Burst: Number(bit?.Burst || 0),
+      Dash: Number(bit?.Dash || 0),
+      Weight: Number(blade?.Weight || 0) + Number(ratchet?.Weight || 0) + Number(bit?.Weight || 0),
+    },
+    Images: {
+      Blade: blade?.Image,
+      Ratchet: ratchet?.Image,
+      Bit: bit?.Image,
+    },
+  };
+};
 
 const tabs = ['Builder 1', 'Builder 2', 'Simulator'];
 
@@ -13,32 +41,8 @@ const Dashboard = () => {
   const [activeTab, setActiveTab] = useState(0);
   const { fetchBeyData } = useBeyDataStore();
   const { myBey, opponentBey } = useBeyBattleStore();
-
-  const convertCombo = ({ blade, ratchet, bit }: BeyCombo): FullBeyblade => {
-    return {
-      Name: `${blade?.Name} / ${ratchet?.Name} / ${bit?.Name}`,
-      Spin: blade?.Spin || '',
-      Series: blade?.Series || '',
-      Type: blade?.Type || '',
-      Parts: {
-        Blade: blade?.Name || '',
-        Ratchet: ratchet?.Name || '',
-        Bit: bit?.Name || '',
-      },
-      Stats: {
-        Attack:
-          Number(blade?.Attack || 0) + Number(ratchet?.Attack || 0) + Number(bit?.Attack || 0),
-        Defense:
-          Number(blade?.Defense || 0) + Number(ratchet?.Defense || 0) + Number(bit?.Defense || 0),
-        Stamina:
-          Number(blade?.Stamina || 0) + Number(ratchet?.Stamina || 0) + Number(bit?.Stamina || 0),
-        Burst: Number(bit?.Burst || 0),
-        Dash: Number(bit?.Dash || 0),
-        Weight:
-          Number(blade?.Weight || 0) + Number(ratchet?.Weight || 0) + Number(bit?.Weight || 0),
-      },
-    };
-  };
+  const myBuild = useMemo(() => convertCombo(myBey), [myBey]);
+  const opponentBuild = useMemo(() => convertCombo(opponentBey), [opponentBey]);
 
   useEffect(() => {
     fetchBeyData();
@@ -61,28 +65,23 @@ const Dashboard = () => {
               </button>
             ))}
           </div>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeTab}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-              className="w-full dark:text-white text-black"
-            >
-              {activeTab === 0 && <Builder build={convertCombo(myBey)} name="My Bey" />}
-              {activeTab === 1 && <Builder build={convertCombo(opponentBey)} name="Opponent" />}
-              {activeTab === 2 && (
-                <Simulator build={convertCombo(myBey)} versus={convertCombo(opponentBey)} />
-              )}
-            </motion.div>
-          </AnimatePresence>
+          <div className="relative w-full h-full">
+            <div className={`${activeTab === 0 ? 'block' : 'hidden'}`}>
+              <Builder build={myBuild} name="My Bey" />
+            </div>
+            <div className={`${activeTab === 1 ? 'block' : 'hidden'}`}>
+              <Builder build={opponentBuild} name="Opponent" />
+            </div>
+            <div className={`${activeTab === 2 ? 'block' : 'hidden'}`}>
+              <Simulator build={myBuild} versus={opponentBuild} />
+            </div>
+          </div>
         </div>
 
         <div className="hidden lg:flex lg:flmd:flex-row gap-2 w-full h-full dark:text-white text-black">
-          <Builder build={convertCombo(myBey)} name="My Bey" />
-          <Builder build={convertCombo(opponentBey)} name="Opponent" />
-          <Simulator build={convertCombo(myBey)} versus={convertCombo(opponentBey)} />
+          <Builder build={myBuild} name="My Bey" />
+          <Builder build={opponentBuild} name="Opponent" />
+          <Simulator build={myBuild} versus={opponentBuild} />
         </div>
       </div>
     </DashboardLayout>

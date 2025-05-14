@@ -1,6 +1,5 @@
 'use client';
 import React, { FC, useEffect, useState } from 'react';
-import { IconFlareFilled, IconLabelFilled, IconWindmillFilled } from '@tabler/icons-react';
 import { BeyPickerProps } from './types';
 import Modal from '../Shared/Modal/Modal';
 import { CardHover } from '../Shared/Cards/Cards';
@@ -9,6 +8,9 @@ import { useBeyDataStore } from '@/store/useBeyDataStore';
 import { Bit, Blade, Ratchet } from '@/model/collections';
 import { BeyPart, useBeyBattleStore } from '@/store/useBeyBattleStore';
 import { IconX } from '@tabler/icons-react';
+import { IconEdit } from '@tabler/icons-react';
+import NextImage from '../Shared/NextImage/NextImage';
+import CustomSelect from '../Shared/Select/CustomSelect';
 
 const BeyPicker: FC<BeyPickerProps> = ({ build, name, picking }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,13 +20,14 @@ const BeyPicker: FC<BeyPickerProps> = ({ build, name, picking }) => {
   const [filteredParts, setFilteredParts] = useState<Blade[] | Ratchet[] | Bit[]>(parts);
   const [fiterValue, setFilterValue] = useState<string>('');
   const { blades, ratchets, bits, loading } = useBeyDataStore();
+  const [sortOption, setSortOption] = useState<string>('');
 
   useEffect(() => {
-    if (modalType === 'Blades') {
+    if (modalType === 'Blade') {
       setParts(blades);
     } else if (modalType === 'Ratchet') {
       setParts(ratchets);
-    } else if (modalType === 'Bits') {
+    } else if (modalType === 'Bit') {
       setParts(bits);
     }
   }, [modalType, blades, ratchets, bits]);
@@ -49,11 +52,11 @@ const BeyPicker: FC<BeyPickerProps> = ({ build, name, picking }) => {
     setFilterValue(e.target.value);
     // Get all available parts based on modalType
     let allParts: Blade[] | Ratchet[] | Bit[] = [];
-    if (modalType === 'Blades') {
+    if (modalType === 'Blade') {
       allParts = blades;
     } else if (modalType === 'Ratchet') {
       allParts = ratchets;
-    } else if (modalType === 'Bits') {
+    } else if (modalType === 'Bit') {
       allParts = bits;
     }
 
@@ -73,7 +76,7 @@ const BeyPicker: FC<BeyPickerProps> = ({ build, name, picking }) => {
     setFilteredParts(parts);
   };
 
-  const placeholders = [`Search for ${modalType}'${modalType !== 'Blades' ? 's' : ''} name . . .`];
+  const placeholders = [`Search for ${modalType}'${modalType !== 'Blade' ? 's' : ''} name . . .`];
 
   const handlePartSelect = (
     partType: 'blade' | 'ratchet' | 'bit',
@@ -105,13 +108,13 @@ const BeyPicker: FC<BeyPickerProps> = ({ build, name, picking }) => {
 
   const handleSelectCard = (item: { Name: string }) => {
     let newParts = '';
-    if (modalType === 'Blades') {
+    if (modalType === 'Blade') {
       newParts = 'blade';
     }
     if (modalType === 'Ratchet') {
       newParts = 'ratchet';
     }
-    if (modalType === 'Bits') {
+    if (modalType === 'Bit') {
       newParts = 'bit';
     }
 
@@ -145,6 +148,23 @@ const BeyPicker: FC<BeyPickerProps> = ({ build, name, picking }) => {
     setFilteredParts(parts);
   }, [parts]);
 
+  useEffect(() => {
+    if (!sortOption) {
+      setFilteredParts(parts);
+      return;
+    }
+
+    const sorted = [...parts].sort((a, b) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const aVal = parseFloat((a as Record<string, any>)[sortOption] || '0');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const bVal = parseFloat((b as Record<string, any>)[sortOption] || '0');
+      return bVal - aVal; // Descending order
+    });
+
+    setFilteredParts(sorted);
+  }, [sortOption, parts]);
+
   return (
     name && (
       <>
@@ -152,34 +172,88 @@ const BeyPicker: FC<BeyPickerProps> = ({ build, name, picking }) => {
           <button
             type="button"
             disabled={picking}
-            onClick={() => handleOpenDialog({ label: name, type: 'Blades', isOpen: true })}
-            className="w-full h-auto bg-neutral-700 rounded-lg cursor-pointer hover:scale-105 duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+            onClick={() => handleOpenDialog({ label: name, type: 'Blade', isOpen: true })}
+            className="w-full h-auto bg-neutral-300 dark:bg-neutral-700 rounded-lg cursor-pointer hover:scale-105 duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <div className={`flex items-center gap-2 p-4 flex-row`}>
-              <IconWindmillFilled className={`text-neutral-200 h-10 w-10`} />
-              <span className="text-neutral-200">{build && build.Parts.Blade}</span>
+            <div className={`flex items-center gap-4 p-4 flex-row text-black dark:text-white`}>
+              {build.Images.Blade ? (
+                <NextImage
+                  src={build.Images.Blade}
+                  alt="Parts placeholder image"
+                  fill
+                  className="z-10 relative object-fill rounded-lg overflow-hidden"
+                  containerClass="relative h-10 w-10 mx-auto"
+                />
+              ) : (
+                <NextImage
+                  src={`/assets/unlocked-blade.png`}
+                  alt="Parts placeholder image"
+                  height={300}
+                  width={300}
+                  className="z-10 relative w-full rounded-lg overflow-hidden"
+                  containerClass="relative h-10 w-10 mx-auto"
+                />
+              )}
+              <span className="w-full text-left">{build && build.Parts.Blade}</span>
+              <IconEdit stroke={2} />
             </div>
           </button>
           <button
             type="button"
             disabled={picking}
             onClick={() => handleOpenDialog({ label: name, type: 'Ratchet', isOpen: true })}
-            className="w-full h-auto bg-neutral-700 rounded-lg cursor-pointer hover:scale-105 duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full h-auto bg-neutral-300 dark:bg-neutral-700 rounded-lg cursor-pointer hover:scale-105 duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <div className={`flex items-center gap-2 p-4 flex-row`}>
-              <IconFlareFilled className={`text-neutral-200 h-10 w-10`} />
-              <span className="text-neutral-200">{build && build.Parts.Ratchet}</span>
+            <div className={`flex items-center gap-4 p-4 flex-row text-black dark:text-white`}>
+              {build.Images.Ratchet ? (
+                <NextImage
+                  src={build.Images.Ratchet}
+                  alt="Parts placeholder image"
+                  fill
+                  className="z-10 relative w-full object-fill rounded-lg overflow-hidden"
+                  containerClass="relative h-10 w-10 mx-auto"
+                />
+              ) : (
+                <NextImage
+                  src={`/assets/unlocked-ratchet.png`}
+                  alt="Parts placeholder image"
+                  height={300}
+                  width={300}
+                  className="z-10 relative w-full rounded-lg overflow-hidden"
+                  containerClass="relative h-10 w-10 mx-auto"
+                />
+              )}
+              <span className="w-full text-left">{build && build.Parts.Ratchet}</span>
+              <IconEdit stroke={2} />
             </div>
           </button>
           <button
             type="button"
             disabled={picking}
-            onClick={() => handleOpenDialog({ label: name, type: 'Bits', isOpen: true })}
-            className="w-full h-auto bg-neutral-700 rounded-lg cursor-pointer hover:scale-105 duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+            onClick={() => handleOpenDialog({ label: name, type: 'Bit', isOpen: true })}
+            className="w-full h-auto bg-neutral-300 dark:bg-neutral-700 rounded-lg cursor-pointer hover:scale-105 duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <div className={`flex items-center gap-2 p-4 flex-row`}>
-              <IconLabelFilled className={`text-neutral-200 h-10 w-10 rotate-90`} />
-              <span className="text-neutral-200">{build ? build.Parts.Bit : 'Pick a Bit'}</span>
+            <div className={`flex items-center gap-4 p-4 flex-row`}>
+              {build.Images.Bit ? (
+                <NextImage
+                  src={build.Images.Bit}
+                  alt="Parts placeholder image"
+                  fill
+                  className="z-10 relative w-full object-fill rounded-lg overflow-hidden"
+                  containerClass="relative h-10 w-10 mx-auto"
+                />
+              ) : (
+                <NextImage
+                  src={`/assets/unlocked-bit.png`}
+                  alt="Parts placeholder image"
+                  height={300}
+                  width={300}
+                  className="z-10 relative w-full rounded-lg overflow-hidden"
+                  containerClass="relative h-10 w-10 mx-auto"
+                />
+              )}
+              <span className="w-full text-left">{build ? build.Parts.Bit : 'Pick a Bit'}</span>
+              <IconEdit stroke={2} />
             </div>
           </button>
         </div>
@@ -228,11 +302,23 @@ const BeyPicker: FC<BeyPickerProps> = ({ build, name, picking }) => {
         </div>
 
         <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} fullView={true}>
-          <div className="flex flex-col h-full relative p-4">
-            <h2 className="mt-10 text-xl font-semibold mb-2 text-center">
-              {modalLabel === 'Opponent'
-                ? `Pick Opponent's ${modalType}`
-                : `Pick Your ${modalType}`}
+          <div className="flex flex-col h-full p-4">
+            <h2 className="mt-6 text-xl font-semibold mb-4 text-center text-white dark:text-white flex flex-col sm:flex-row justify-between max-w-xl mx-auto w-full items-center">
+              <>
+                {modalLabel === 'Opponent'
+                  ? `Pick Opponent's ${modalType}`
+                  : `Pick Your ${modalType}`}
+              </>
+              <div className="flex gap-2 mt-2 sm:mt-0">
+                <CustomSelect value={sortOption} onChange={setSortOption} />
+                <button
+                  type="button"
+                  className="rounded-full bg-neutral-500 opacity-80 hover:opacity-100 cursor-pointer duration-100 w-10 h-10 flex items-center justify-center"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <IconX stroke={2} className="h-6 w-6" />
+                </button>
+              </div>
             </h2>
             <PlaceholdersAndVanishInput
               placeholders={placeholders}
@@ -240,7 +326,7 @@ const BeyPicker: FC<BeyPickerProps> = ({ build, name, picking }) => {
               newValue={fiterValue}
               onSubmit={onSubmit}
             />
-            <div className="flex-1 overflow-y-auto my-10">
+            <div className="flex-1 overflow-y-auto my-4 md:my-10">
               <CardHover
                 data={filteredParts}
                 loading={loading}
@@ -250,13 +336,6 @@ const BeyPicker: FC<BeyPickerProps> = ({ build, name, picking }) => {
                 type={modalType}
               />
             </div>
-            <button
-              type="button"
-              className="p-2 rounded-full bg-neutral-500 opacity-80 hover:opacity-100 cursor-pointer duration-100 absolute top-2 right-2"
-              onClick={() => setIsOpen(false)}
-            >
-              <IconX stroke={2} className="h-4 w-4" />
-            </button>
           </div>
         </Modal>
       </>

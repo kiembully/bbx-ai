@@ -21,7 +21,7 @@ const Modal: FC<ModalProps> = ({ isOpen, onClose, children, fullView }) => {
           onClick={onClose}
         >
           <motion.div
-            className={`bg-neutral-900 rounded-2xl shadow-xl w-full ${fullView ? 'h-screen' : 'max-w-[80%] md:max-w-[60%] max-h-[60vh] overflow-hidden'}`}
+            className={`bg-neutral-900 shadow-xl w-full ${fullView ? 'h-screen' : 'rounded-2xl max-w-[80%] md:max-w-[60%] max-h-[60vh] overflow-hidden'}`}
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}

@@ -25,7 +25,7 @@ export const CardHover: React.FC<CardHoverProps> = ({
   };
 
   return (
-    <div className="mx-auto px-8">
+    <div className="mx-auto px-0 sm:px-8">
       <HoverEffect
         loading={loading}
         items={data}
