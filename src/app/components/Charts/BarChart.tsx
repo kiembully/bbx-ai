@@ -1,11 +1,5 @@
 import React, { FC } from 'react';
-import {
-  BarChart as RechartsBarChart,
-  Bar,
-  Cell,
-  ResponsiveContainer,
-  LabelList,
-} from 'recharts';
+import { BarChart as RechartsBarChart, Bar, Cell, ResponsiveContainer, LabelList } from 'recharts';
 
 interface StatData {
   stat: string;
@@ -17,30 +11,26 @@ interface BarChartProps {
   data: StatData[];
 }
 
+// Soft color palette by stat
+const statColors: Record<string, string> = {
+  attack: '#f87171', // soft red
+  defense: '#60a5fa', // soft blue
+  stamina: '#34d399', // soft green
+  burst: '#fbbf24', // soft amber
+  weight: '#a78bfa', // soft purple
+  agility: '#38bdf8', // soft sky
+  balance: '#f472b6', // soft pink
+};
+
 const CustomBarChart: FC<BarChartProps> = ({ data }) => {
-  const barColor = '#8884d8';
-
-  const isDarkColor = (hexColor: string) => {
-    const r = parseInt(hexColor.slice(1, 3), 16);
-    const g = parseInt(hexColor.slice(3, 5), 16);
-    const b = parseInt(hexColor.slice(5, 7), 16);
-    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-    return brightness < 128;
-  };
-
-  const labelFill = isDarkColor(barColor) ? '#000' : '#fff';
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const renderStatLabel = (props: any) => {
-    const { x, y, width, value } = props;
+    const { x, y, width, value, index } = props;
+    const statKey = data[index]?.stat.toLowerCase();
+    const fill = statColors[statKey] || '#8884d8';
+
     return (
-      <text
-        x={x! + width! / 2}
-        y={y! - 10}
-        fill={labelFill}
-        fontSize={12}
-        textAnchor="middle"
-      >
+      <text x={x! + width! / 2} y={y! - 10} fill={fill} fontSize={12} textAnchor="middle">
         {value}
       </text>
     );
@@ -48,15 +38,12 @@ const CustomBarChart: FC<BarChartProps> = ({ data }) => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const renderValueLabel = (props: any) => {
-    const { x, y, width, value } = props;
+    const { x, y, width, value, index } = props;
+    const statKey = data[index]?.stat.toLowerCase();
+    const fill = statColors[statKey] || '#8884d8';
+
     return (
-      <text
-        x={x! + width! / 2}
-        y={y! - 25}
-        fill={labelFill}
-        fontSize={12}
-        textAnchor="middle"
-      >
+      <text x={x! + width! / 2} y={y! - 25} fill={fill} fontSize={12} textAnchor="middle">
         {value}
       </text>
     );
@@ -67,9 +54,10 @@ const CustomBarChart: FC<BarChartProps> = ({ data }) => {
       <ResponsiveContainer>
         <RechartsBarChart data={data} margin={{ top: 40, bottom: 0 }}>
           <Bar dataKey="value">
-            {data.map((_, index) => (
-              <Cell cursor="pointer" fill={barColor} key={`cell-${index}`} />
-            ))}
+            {data.map((entry, index) => {
+              const color = statColors[entry.stat.toLowerCase()] || '#8884d8';
+              return <Cell key={`cell-${index}`} fill={color} cursor="pointer" />;
+            })}
             <LabelList dataKey="stat" content={renderStatLabel} />
             <LabelList dataKey="value" content={renderValueLabel} />
           </Bar>

@@ -84,9 +84,13 @@ const ChatHome = () => {
                   backgroundColor: i % 2 === 0 ? '#323232' : 'transparent',
                   borderRadius: '50px',
                   padding: '1rem',
-                  width: i % 2 === 0 ? 'full' : 'fit-content'
+                  width: i % 2 === 0 ? 'full' : 'fit-content',
                 }}
-                className={i % 2 === 0 ? 'justify-self-end text-white' : 'justify-self-start text-black dark:text-white'}
+                className={
+                  i % 2 === 0
+                    ? 'justify-self-end text-white'
+                    : 'justify-self-start text-black dark:text-white'
+                }
               >
                 {line}
               </div>
