@@ -229,7 +229,7 @@ const BeyPicker: FC<BeyPickerProps> = ({ build, name, picking }) => {
 
         <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} fullView={true}>
           <div className="flex flex-col h-full relative p-4">
-            <h2 className="text-xl font-semibold mb-2 text-center">
+            <h2 className="mt-10 text-xl font-semibold mb-2 text-center">
               {modalLabel === 'Opponent'
                 ? `Pick Opponent's ${modalType}`
                 : `Pick Your ${modalType}`}

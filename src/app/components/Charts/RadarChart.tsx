@@ -50,7 +50,7 @@ const RadarVisualStats: React.FC<RadarVisualStatsProps> = ({ builds, isLoading }
     <div className="h-82 w-full min-w-[200px] flex items-center justify-center">
       <svg
         aria-hidden="true"
-        className="inline w-10 h-10 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+        className="inline w-10 h-10 text-neutral-200 animate-spin dark:text-gray-600 fill-blue-600"
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -67,7 +67,7 @@ const RadarVisualStats: React.FC<RadarVisualStatsProps> = ({ builds, isLoading }
       <span className="sr-only">Loading...</span>
     </div>
   ) : (
-    <div style={{ width: '100%', height: 300 }}>
+    <div style={{ width: '100%', height: 250 }}>
       <ResponsiveContainer>
         <RadarChart outerRadius="100%" data={radarData} margin={{ top: 40 }}>
           <PolarGrid />

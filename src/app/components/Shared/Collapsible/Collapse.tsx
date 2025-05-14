@@ -11,7 +11,7 @@ interface CollapseProps {
 }
 
 const Collapse: React.FC<CollapseProps> = ({ items }) => {
-  const [activeIndex, setActiveIndex] = useState(0); // First one open by default
+  const [activeIndex, setActiveIndex] = useState(0); // First open by default
 
   const toggle = (index: number) => {
     setActiveIndex((prev) => (prev === index ? -1 : index));
@@ -29,11 +29,12 @@ const Collapse: React.FC<CollapseProps> = ({ items }) => {
           </button>
           <div
             className={`transition-all duration-300 ease-in-out overflow-hidden ${
-              activeIndex === index ? 'h-auto py-4' : 'h-0 py-0'
+              activeIndex === index ? 'max-h-[1000px] p-4 opacity-100' : 'max-h-0 p-0 opacity-0'
             }`}
-            style={{ flexGrow: activeIndex === index ? 1 : 0 }}
+            style={{ transitionProperty: 'max-height, padding, opacity' }}
           >
-            {activeIndex === index && <div className="text-white px-4">{item.content}</div>}
+            {/* ✅ Always mounted */}
+            <div className="text-white">{item.content}</div>
           </div>
         </div>
       ))}

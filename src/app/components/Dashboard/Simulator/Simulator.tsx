@@ -5,6 +5,7 @@ import Collapse from '../../Shared/Collapsible/Collapse';
 import { Build } from '../types';
 import ResultsDisplay from './ResultDisplay';
 import BattleGuide from './BattleGuide';
+import Insights from './Insights';
 interface SimulatorProps {
   build: Build;
   versus: Build;
@@ -17,9 +18,11 @@ const Versus: React.FC<SimulatorProps> = ({ build, versus }) => {
   }, [build]);
 
   return (
-    <div className="flex flex-col gap-y-4">
+    <div className="flex flex-col gap-y-4 bg-white shadow-md rounded-lg pb-4">
       <div className="flex flex-col gap-y-2 max-h-[60vh] overflow-x-hidden overflow-y-auto">
-        <RadarVisualStats builds={[build, versus]} isLoading={isLoading} />
+        <div className="h-[250px] w-full mt-6">
+          <RadarVisualStats builds={[build, versus]} isLoading={isLoading} />
+        </div>
         <div className="flex flex-col gap-2 mb-2 items-center">
           <div className="text-md font-semibold text-[#ff7875]">{build.Name}</div>
           <div className="text-md font-semibold text-[#82ca9d]">{versus.Name}</div>
@@ -43,8 +46,8 @@ const Simulator: React.FC<SimulatorProps> = ({ build, versus }) => {
               content: <Versus build={build} versus={versus} />,
             },
             {
-              title: 'AI Suggestions 🤖',
-              content: <h1>Soon . . .</h1>,
+              title: 'AI Insights 🤖',
+              content: <Insights />,
             },
             {
               title: 'Battle Guide 📝',

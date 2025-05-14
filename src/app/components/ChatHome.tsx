@@ -22,35 +22,35 @@ const ChatHome = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMessage(e.target.value);
   };
+
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     handleSend();
   };
 
+  // Example for handling streaming responses (if Ollama's stream:true)
   const handleSend = async () => {
-    if (!message) return;
+    if (!message.trim() || loading) return;
+
     setLoading(true);
     setChat((prev) => [...prev, `🧑: ${message}`]);
 
     try {
-      const res = await fetch('/api/chat', {
+      const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message }),
       });
 
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
+      if (!response.ok) throw new Error("Ollama didn't respond");
 
-      const data = await res.json();
+      const data = await response.json();
       setChat((prev) => [...prev, `🤖: ${data.reply}`]);
     } catch (error) {
-      console.error('Error fetching chat response:', error);
-      setChat((prev) => [...prev, '🤖: Sorry, something went wrong.']);
+      setChat((prev) => [...prev, `🤖: ${error instanceof Error ? error.message : 'Error'}`]);
     } finally {
-      setMessage('');
       setLoading(false);
+      setMessage('');
     }
   };
 
@@ -58,7 +58,7 @@ const ChatHome = () => {
     <div className="w-full">
       <div className="flex flex-col justify-center items-center py-4 w-full min-h-screen">
         {chat.length === 0 && (
-          <h1 className="mb-10 sm:mb-20 text-2xl text-center sm:text-5xl dark:text-white text-black">
+          <h1 className="mb-10 sm:mb-20 text-2xl text-center sm:text-5xl">
             Ask Beyblade X Chat Assistant Anything
           </h1>
         )}
@@ -74,11 +74,10 @@ const ChatHome = () => {
             <div
               key={i}
               style={{
-                textAlign: i % 2 === 0 ? 'left' : 'right',
+                textAlign: i % 2 === 0 ? 'right' : 'left',
                 margin: '1rem 0',
                 color: i % 2 === 0 ? '#000' : '#000',
                 maxWidth: '100%',
-                alignSelf: i % 2 === 0 ? 'flex-start' : 'flex-end',
               }}
             >
               <div
@@ -87,15 +86,16 @@ const ChatHome = () => {
                   borderRadius: '50px',
                   color: '#fff',
                   padding: '1rem',
-                  width: i % 2 === 0 ? 'fit-content' : 'full',
+                  width: i % 2 === 0 ? 'full' : 'fit-content',
                 }}
+                className={i % 2 === 0 ? 'justify-self-end' : 'justify-self-start'}
               >
                 {line}
               </div>
             </div>
           ))}
           {loading && (
-            <div className="justify-items-end text-right">
+            <div className="justify-items-start text-right m-6">
               <div className="flex flex-row gap-2">
                 <div className="w-2 h-2 rounded-full bg-blue-500 animate-bounce"></div>
                 <div className="w-2 h-2 rounded-full bg-blue-500 animate-bounce [animation-delay:-.3s]"></div>

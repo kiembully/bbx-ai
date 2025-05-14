@@ -68,7 +68,7 @@ const Dashboard = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
-              className="w-full"
+              className="w-full dark:text-white text-black"
             >
               {activeTab === 0 && <Builder build={convertCombo(myBey)} name="My Bey" />}
               {activeTab === 1 && <Builder build={convertCombo(opponentBey)} name="Opponent" />}
@@ -79,7 +79,7 @@ const Dashboard = () => {
           </AnimatePresence>
         </div>
 
-        <div className="hidden lg:flex lg:flmd:flex-row gap-2 w-full h-full">
+        <div className="hidden lg:flex lg:flmd:flex-row gap-2 w-full h-full dark:text-white text-black">
           <Builder build={convertCombo(myBey)} name="My Bey" />
           <Builder build={convertCombo(opponentBey)} name="Opponent" />
           <Simulator build={convertCombo(myBey)} versus={convertCombo(opponentBey)} />

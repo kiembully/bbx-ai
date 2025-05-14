@@ -1,56 +1,51 @@
 // pages/api/chat.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-const HF_API_KEY = process.env.NEXT_PUBLIC_HUGGINGFACE_API_KEY;
-const MODEL = 'mistralai/Mixtral-8x7B-Instruct-v0.1'; // you can swap this for another if needed
-
-// Domain-specific prompt
 const contextPrompt = `
 You are a Beyblade X expert assistant. You help users choose optimal Beyblade X combos and explain part functions.
 
 Here are example combos:
 - 🟥 Attack: Dran Sword 3-60F (Dran Sword Blade, 3-60 Ratchet, Flat Bit)
 - 🟦 Defense: Hells Scythe 4-80B (Hells Scythe Blade, 4-80 Ratchet, Ball Bit)
+- 🟨 Stamina: Wizard Arrow 5-80WD (Wizard Arrow Blade, 5-80 Ratchet, Wide Defense Bit)
 - 🟩 Balance: Knight Shield 4-60HN (Knight Shield Blade, 4-60 Ratchet, High Needle Bit)
 
-Use real Beyblade X part names and suggest combos based on user's playstyle. Be concise and informative.
+Use real Beyblade X part names, real tournament results scenarios, and suggest combos based on user's playstyle. Be concise and informative.
 `;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
 
   const { message } = req.body;
-  if (!message) return res.status(400).json({ error: 'Message is required' });
+  if (!message) {
+    return res.status(400).json({ error: 'Message is required' });
+  }
 
   try {
-    const response = await fetch(`https://api-inference.huggingface.co/models/${MODEL}`, {
+    const response = await fetch('http://127.0.0.1:11434/api/generate', {
       method: 'POST',
-      headers: {
-        Authorization: `Bearer ${HF_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        inputs: `${contextPrompt}\n\nUser: ${message}\nAssistant:`,
+        model: 'phi3', // or 'mistral'
+        prompt: `${contextPrompt}\n\nUser: ${message}\nAssistant:`,
+        stream: false, // Set to 'true' for streaming responses
       }),
     });
 
     if (!response.ok) {
-      const error = await response.json();
-      console.error('Hugging Face Error:', error);
-      return res.status(500).json({ error: 'Hugging Face API error' });
+      throw new Error(`Ollama error: ${response.statusText}`);
     }
 
     const data = await response.json();
-    const text = data?.[0]?.generated_text || 'Sorry, no response.';
-    const reply = text.replace(/^.*?\nAssistant:/, '').trim();
+    const reply = data.response?.trim() || "Sorry, I couldn't generate a response.";
 
     return res.status(200).json({ reply });
-  } catch (err: unknown) {
-    if (err instanceof Error) {
-      console.error('❌ Error:', err.message);
-    } else {
-      console.error('❌ Unknown error:', err);
-    }
-    return res.status(500).json({ error: 'Server error' });
+  } catch (error) {
+    console.error('Ollama API error:', error);
+    return res.status(500).json({
+      error: 'Local AI service not running. Did you install Ollama and run `ollama serve`?',
+    });
   }
 }

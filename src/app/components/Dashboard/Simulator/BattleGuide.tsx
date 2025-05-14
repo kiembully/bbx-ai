@@ -1,6 +1,6 @@
 const BattleGuide = () => {
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
+    <div className="w-full mx-auto p-6 bg-white rounded-lg shadow-md max-h-[570px] overflow-y-auto">
       <h2 className="text-xl font-bold text-center mb-4 text-blue-600">
         Beyblade Battle Simulator: Quick Guide
       </h2>
@@ -9,7 +9,9 @@ const BattleGuide = () => {
         <h3 className="text-lg font-semibold mb-2 text-gray-800">How Wins Are Calculated</h3>
 
         <div className="mb-4">
-          <h4 className="text-medium text-gray-700 mb-1">1. 3 Possible Outcomes</h4>
+          <h4 className="text-medium fon font-semibold text-gray-700 mb-1">
+            1. 3 Possible Outcomes
+          </h4>
           <ul className="list-disc pl-5 space-y-1 text-gray-600">
             <li>
               <span className=" text-sm font-medium">KO (Knock-Out)</span> - Strong attack beats
@@ -27,7 +29,7 @@ const BattleGuide = () => {
         </div>
 
         <div className="mb-4">
-          <h4 className="font-medium text-gray-700 mb-1">2. Key Factors</h4>
+          <h4 className="text-medium font-semibold text-gray-700 mb-1">2. Key Factors</h4>
           <ul className="list-disc pl-5 space-y-1 text-gray-600">
             <li>
               <span className="text-sm font-medium">Attack (ATK)</span> vs{' '}
@@ -46,7 +48,7 @@ const BattleGuide = () => {
         </div>
 
         <div className="mb-4">
-          <h4 className="font-medium text-gray-700 mb-1">3. Final Win %</h4>
+          <h4 className="text-medium font-semibold text-gray-700 mb-1">3. Final Win %</h4>
           <p className="text-sm text-gray-600">
             Simulator runs <span className="font-medium">10,000 battles</span> and averages results.
           </p>
