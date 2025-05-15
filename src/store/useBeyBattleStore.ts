@@ -89,8 +89,6 @@ export const useBeyBattleStore = create<BeyBattleState>((set) => ({
       bit: random(bits),
     };
 
-    console.log(combo);
-
     set((state) => ({
       ...state,
       [target]: combo,
