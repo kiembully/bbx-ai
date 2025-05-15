@@ -22,11 +22,11 @@ const CustomToggle: React.FC<CustomToggleProps> = ({
           checked={checked}
           onChange={(e) => onChange(e.target.checked)}
         />
-        <div className="w-full py-2 px-6 bg-transparent border border-2-black rounded-lg flex">
-          <span className="z-20 text-black w-full flex items-center justify-center text-lg font-bold">
+        <div className="w-full py-2 bg-transparent border border-2-black rounded-lg flex">
+          <span className="z-20 text-black w-full flex items-center justify-center text-sm sm:text-lg font-bold">
             {leftLabel}
           </span>
-          <span className="z-20 text-black w-full flex items-center justify-center text-lg font-bold">
+          <span className="z-20 text-black w-full flex items-center justify-center text-sm sm:text-lg font-bold">
             {rightLabel}
           </span>
         </div>
