@@ -1,4 +1,5 @@
 // store/useBeyBattleStore.ts
+import { Bit, Blade, Ratchet } from '@/model/collections';
 import { create } from 'zustand';
 
 export interface BeyPart {
@@ -27,6 +28,12 @@ interface BeyBattleState {
   setMyBeyPart: (type: keyof BeyCombo, part: BeyPart) => void;
   setOpponentBeyPart: (type: keyof BeyCombo, part: BeyPart) => void;
   resetBattle: () => void;
+  pickRandomParts: (
+    blades: Blade[],
+    ratchets: Ratchet[],
+    bits: Bit[],
+    target: 'myBey' | 'opponentBey'
+  ) => void;
 }
 export interface FullBeyblade {
   Name: string;
@@ -72,4 +79,21 @@ export const useBeyBattleStore = create<BeyBattleState>((set) => ({
       myBey: { blade: null, ratchet: null, bit: null },
       opponentBey: { blade: null, ratchet: null, bit: null },
     }),
+
+  pickRandomParts: (blades, ratchets, bits, target) => {
+    const random = (arr: Bit[] | Blade[] | Ratchet[]) =>
+      arr.length ? arr[Math.floor(Math.random() * arr.length)] : null;
+    const combo = {
+      blade: random(blades),
+      ratchet: random(ratchets),
+      bit: random(bits),
+    };
+
+    console.log(combo);
+
+    set((state) => ({
+      ...state,
+      [target]: combo,
+    }));
+  },
 }));

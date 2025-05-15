@@ -8,6 +8,7 @@ export default function handler(req, res) {
 
     // Calculate base probabilities
     const probabilities = calculateBaseProbabilities(bey1, bey2);
+    const probabilities2 = calculateBaseProbabilities(bey2, bey1);
     const results = { bey1: 0, bey2: 0, draws: 0 };
     const outcomeDetails = {
       bey1: { KO: 0, BURST: 0, OUTSPIN: 0 },
@@ -69,6 +70,7 @@ export default function handler(req, res) {
         },
       },
       probabilities,
+      probabilities2,
     });
   } catch (error) {
     res.status(500).json({ message: 'Error simulating battle', error: error.message });

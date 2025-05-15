@@ -21,6 +21,7 @@ export interface BeyBattleResult {
     bey2: BattleOutcomeDetails;
   };
   probabilities: BattleProbabilities;
+  probabilities2: BattleProbabilities;
 }
 
 export interface BuildStats {

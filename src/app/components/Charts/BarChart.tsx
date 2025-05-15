@@ -51,7 +51,7 @@ const CustomBarChart: FC<BarChartProps> = ({ data }) => {
 
   return (
     <div className="w-full pb-0" style={{ height: 270 }}>
-      <ResponsiveContainer>
+      <ResponsiveContainer minHeight={200}>
         <RechartsBarChart data={data} margin={{ top: 40, bottom: 0 }}>
           <Bar dataKey="value">
             {data.map((entry, index) => {
