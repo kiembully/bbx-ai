@@ -1,10 +1,11 @@
 'use client';
 import React, { useState, FC } from 'react';
 import { Sidebar, SidebarBody, SidebarLink } from '../components/ui/sidebar';
-import { IconArrowLeft, IconBrandTabler, IconSettings, IconUserBolt } from '@tabler/icons-react';
-import { motion } from 'motion/react';
+import { IconListDetails, IconBrandTabler } from '@tabler/icons-react';
+import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../lib/utils';
 import Link from 'next/link';
+import NextImage from '../components/Shared/NextImage/NextImage';
 
 interface DashboardLayoutProps {
   animate?: boolean;
@@ -19,24 +20,24 @@ const DashboardLayout: FC<DashboardLayoutProps> = ({ animate, children }) => {
   const links = [
     {
       label: 'Dashboard',
-      href: '#',
+      href: '/dashboard',
       icon: <IconBrandTabler className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
     },
     {
-      label: 'Profile',
-      href: '#',
-      icon: <IconUserBolt className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
+      label: 'Collections',
+      href: '/collections',
+      icon: <IconListDetails className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
     },
-    {
-      label: 'Settings',
-      href: '#',
-      icon: <IconSettings className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
-    },
-    {
-      label: 'Logout',
-      href: '#',
-      icon: <IconArrowLeft className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
-    },
+    // {
+    //   label: 'Settings',
+    //   href: '#',
+    //   icon: <IconSettings className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
+    // },
+    // {
+    //   label: 'Logout',
+    //   href: '#',
+    //   icon: <IconArrowLeft className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
+    // },
   ];
   const [open, setOpen] = useState(false);
   return (
@@ -56,13 +57,47 @@ const DashboardLayout: FC<DashboardLayoutProps> = ({ animate, children }) => {
             </div>
           </div>
           <div>
-            <SidebarLink
-              link={{
-                label: 'Manu Arora',
-                href: '#',
-                icon: <>a</>,
-              }}
-            />
+            <AnimatePresence>
+              {open && (
+                <motion.div
+                  key="donation-message"
+                  className="flex flex-col gap-2"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0, transition: { delay: 0.3, duration: 0.4 } }}
+                  exit={{ opacity: 0, y: 10, transition: { duration: 0.2 } }}
+                >
+                  <SidebarLink
+                    link={{
+                      label: 'By: Kim Santino ',
+                      href: 'https://kim-vale-portfolio.vercel.app/',
+                      icon: (
+                        <NextImage
+                          src="/avatar.jpeg"
+                          alt="Parts image"
+                          fill
+                          className="z-10 absolute object-fit overflow-hidden"
+                          containerClass="relative w-6 h-6 rounded-full overflow-hidden"
+                        />
+                      ),
+                    }}
+                  />
+                  <div className="text-xs text-neutral-600 dark:text-neutral-300">
+                    If you enjoy my work and want to help keep it going, consider donating 💸{' '}
+                    <Link
+                      href="https://www.paypal.me/kimsantino"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-400"
+                    >
+                      paypal.me/kimsantino
+                    </Link>
+                  </div>
+                  <div className="text-xs text-neutral-600 dark:text-neutral-300">
+                    DISCLAIMER: This page is fan-run and not affiliated with Hasbro or Takara Tomy.
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </SidebarBody>
       </Sidebar>

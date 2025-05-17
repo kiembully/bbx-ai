@@ -1,4 +1,3 @@
-
 export type Bey = {
   name: string;
   type: 'Attack' | 'Defense' | 'Stamina' | string;

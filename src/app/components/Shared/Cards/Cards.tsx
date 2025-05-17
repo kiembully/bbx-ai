@@ -10,6 +10,7 @@ interface CardHoverProps {
   onSelect?: (item: { Name: string }) => void;
   build?: Build;
   type?: string;
+  onView?: (id: string) => void;
 }
 
 export const CardHover: React.FC<CardHoverProps> = ({
@@ -19,6 +20,7 @@ export const CardHover: React.FC<CardHoverProps> = ({
   onSelect,
   build,
   type,
+  onView,
 }) => {
   const handleClick = (item: { Name: string }) => {
     onSelect?.(item);
@@ -33,6 +35,7 @@ export const CardHover: React.FC<CardHoverProps> = ({
         onSelect={(item) => handleClick(item)}
         build={build}
         type={type}
+        onView={onView}
       />
     </div>
   );

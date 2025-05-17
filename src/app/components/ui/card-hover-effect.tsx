@@ -14,6 +14,7 @@ export const HoverEffect = ({
   onSelect,
   build,
   type,
+  onView,
 }: {
   items: {
     Name: string;
@@ -26,12 +27,20 @@ export const HoverEffect = ({
   onSelect?: (item: { Name: string }) => void;
   build?: Build;
   type?: string;
+  onView?: (id: string) => void;
 }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   const handleClick = (item: { Name: string }) => {
     if (variant === 'selectable' && typeof onSelect === 'function') {
       onSelect(item);
+    }
+  };
+
+  const handleViewCard = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    if (variant !== 'selectable' && onView) {
+      onView(id);
     }
   };
 
@@ -54,7 +63,7 @@ export const HoverEffect = ({
       {items.map((item, idx) => (
         <div
           key={item?.Name}
-          className="relative group block p-2 h-full w-full max-w-full md:max-w-[350px] mx-auto cursor-pointer"
+          className={`relative group block p-2 h-full w-full max-w-full md:max-w-[350px] mx-auto ${variant === 'selectable' && 'cursor-pointer'}`}
           onMouseEnter={() => setHoveredIndex(idx)}
           onMouseLeave={() => setHoveredIndex(null)}
           onClick={() => handleClick(item)}
@@ -88,7 +97,7 @@ export const HoverEffect = ({
             )}
           </AnimatePresence>
 
-          <Card>
+          <Card className="shadow-lg">
             {item.Image ? (
               <NextImage
                 src={item.Image}
@@ -108,22 +117,23 @@ export const HoverEffect = ({
               />
             )}
             <div className="flex gap-2 justify-between items-center w-full mt-0 md:mt-4">
-              <CardTitle className="text-sm md:text-xl">
+              <CardTitle
+                className={`text-sm md:text-xl line-clamp-1 text-center ${variant !== 'default' && 'mx-auto'}`}
+              >
                 {loading ? (
                   <div className="h-2.5 animate-pulse bg-gray-200 rounded-full dark:bg-gray-700 w-1/2 mb-4"></div>
                 ) : (
                   item.Name
                 )}
               </CardTitle>
-              <HoverBorderGradient
-                className="flex gap-2 cursor-pointer text-neutral-800 opacity-90 hover:opacity-100 duration-100 bg-sky-500 px-2 py-1"
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}
-              >
-                <div className="hidden md:flex">View</div>
-                <IconEye stroke={2} />
-              </HoverBorderGradient>
+              {variant === 'default' && (
+                <HoverBorderGradient
+                  className={`flex gap-2 items-center justify-center cursor-pointer text-neutral-800 opacity-90 hover:opacity-100 duration-100 bg-sky-500 px-2 py-1`}
+                  onClick={(e) => handleViewCard(e, item.Name)}
+                >
+                  <IconEye stroke={2} />
+                </HoverBorderGradient>
+              )}
             </div>
           </Card>
         </div>

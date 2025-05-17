@@ -3,13 +3,13 @@ import { useEffect, useRef, useState } from 'react';
 interface CustomSelectProps {
   value: string;
   onChange: (val: string) => void;
+  options: string[];
+  variant: 'collections' | 'building';
 }
 
-const CustomSelect = ({ value, onChange }: CustomSelectProps) => {
+const CustomSelect = ({ value, onChange, options, variant }: CustomSelectProps) => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  const options = ['Attack', 'Defense', 'Stamina', 'Burst', 'Dash', 'Weight'];
 
   // Close on outside click
   useEffect(() => {
@@ -32,7 +32,11 @@ const CustomSelect = ({ value, onChange }: CustomSelectProps) => {
   }, []);
 
   return (
-    <div className="relative inline-block w-36" ref={dropdownRef} style={{ zIndex: 9999 }}>
+    <div
+      className="relative inline-block max-w-36"
+      ref={dropdownRef}
+      style={{ zIndex: variant === 'building' ? 9999 : 50 }}
+    >
       <button
         type="button"
         onClick={() => setOpen((prev) => !prev)}
@@ -40,7 +44,7 @@ const CustomSelect = ({ value, onChange }: CustomSelectProps) => {
         aria-haspopup="listbox"
         aria-expanded={open}
       >
-        {value ? `Top ${value}` : `Sort`}
+        {value ? `${variant === 'building' ? 'Top' : ''} ${value}` : `Sort`}
         <svg
           className={`w-2.5 h-2.5 ml-2 transition-transform ${open ? 'rotate-180' : ''}`}
           xmlns="http://www.w3.org/2000/svg"

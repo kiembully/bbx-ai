@@ -1,35 +1,22 @@
-import Image from 'next/image';
+import Link from 'next/link';
 
 const Footer = () => {
   return (
-    <footer className="row-start-3 flex p-10 gap-[24px] flex-wrap items-center justify-center">
-      <a
-        className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-        href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <Image aria-hidden src="/file.svg" alt="File icon" width={16} height={16} />
-        Learn
-      </a>
-      <a
-        className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-        href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <Image aria-hidden src="/window.svg" alt="Window icon" width={16} height={16} />
-        Examples
-      </a>
-      <a
-        className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-        href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <Image aria-hidden src="/globe.svg" alt="Globe icon" width={16} height={16} />
-        Go to nextjs.org →
-      </a>
+    <footer className="row-start-3 flex flex-col p-6 gap-6 items-center text-center">
+      <div className="text-xs text-neutral-600 dark:text-neutral-300">
+        If you enjoy my work and want to help keep it going, consider donating 💸{' '}
+        <Link
+          href="https://www.paypal.me/kimsantino"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-400"
+        >
+          paypal.me/kimsantino
+        </Link>
+      </div>
+      <div className="text-xs text-neutral-600 dark:text-text-neutral-300">
+        DISCLAIMER: This page is fan-run and not affiliated with Hasbro or Takara Tomy.
+      </div>
     </footer>
   );
 };

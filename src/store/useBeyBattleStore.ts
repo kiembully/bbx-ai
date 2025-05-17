@@ -1,20 +1,6 @@
 // store/useBeyBattleStore.ts
-import { Bit, Blade, Ratchet } from '@/model/collections';
+import { BeyPart, Bit, Blade, Ratchet } from '@/model/collections';
 import { create } from 'zustand';
-
-export interface BeyPart {
-  Name: string;
-  Attack?: number;
-  Defense?: number;
-  Stamina?: number;
-  Weight?: number;
-  Spin?: string;
-  Series?: string;
-  Type?: string;
-  Burst?: number;
-  Dash?: number;
-  Image?: string;
-}
 
 export interface BeyCombo {
   blade: BeyPart | null;

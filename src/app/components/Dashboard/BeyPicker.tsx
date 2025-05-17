@@ -5,8 +5,8 @@ import Modal from '../Shared/Modal/Modal';
 import { CardHover } from '../Shared/Cards/Cards';
 import { PlaceholdersAndVanishInput } from '../ui/placeholder-and-vanish-inputs';
 import { useBeyDataStore } from '@/store/useBeyDataStore';
-import { Bit, Blade, Ratchet } from '@/model/collections';
-import { BeyPart, useBeyBattleStore } from '@/store/useBeyBattleStore';
+import { BeyPart, Bit, Blade, Ratchet } from '@/model/collections';
+import { useBeyBattleStore } from '@/store/useBeyBattleStore';
 import { IconX, IconEdit } from '@tabler/icons-react';
 import NextImage from '../Shared/NextImage/NextImage';
 import CustomSelect from '../Shared/Select/CustomSelect';
@@ -28,6 +28,8 @@ const partImages = {
   [PartType.Ratchet]: '/assets/unlocked-ratchet.png',
   [PartType.Bit]: '/assets/unlocked-bit.png',
 };
+
+const statsOptions = ['Attack', 'Defense', 'Stamina', 'Burst', 'Dash', 'Weight'];
 
 const BeyPicker: FC<BeyPickerProps> = ({ build, name, picking }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -187,7 +189,7 @@ const BeyPicker: FC<BeyPickerProps> = ({ build, name, picking }) => {
             alt="Parts placeholder image"
             fill
             className="z-10 relative object-fill rounded-lg overflow-hidden"
-            containerClass="relative h-10 w-10 mx-auto"
+            containerClass="relative h-10 w-14 mx-auto"
           />
         ) : (
           <NextImage
@@ -196,10 +198,10 @@ const BeyPicker: FC<BeyPickerProps> = ({ build, name, picking }) => {
             height={300}
             width={300}
             className="z-10 relative w-full rounded-lg overflow-hidden"
-            containerClass="relative h-10 w-10 mx-auto"
+            containerClass="relative h-10 w-14 mx-auto"
           />
         )}
-        <span className="w-full text-left">{partName || `Pick a ${type}`}</span>
+        <span className="w-full text-left font-bold">{partName || `Pick a ${type}`}</span>
         <IconEdit stroke={2} />
       </div>
     </button>
@@ -247,7 +249,12 @@ const BeyPicker: FC<BeyPickerProps> = ({ build, name, picking }) => {
                 : `Pick Your ${modalType}`}
             </>
             <div className="flex gap-2 mt-2 sm:mt-0">
-              <CustomSelect value={sortOption} onChange={setSortOption} />
+              <CustomSelect
+                value={sortOption}
+                onChange={setSortOption}
+                options={statsOptions}
+                variant="building"
+              />
               <button
                 type="button"
                 className="rounded-full bg-neutral-500 opacity-80 hover:opacity-100 cursor-pointer duration-100 w-10 h-10 flex items-center justify-center"

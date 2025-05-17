@@ -42,7 +42,7 @@ const runSymmetricBattle = (
       details[defenderKey].OUTSPIN++;
     }
   }
-}
+};
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -51,7 +51,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
   try {
     const { bey1, bey2, iterations = 10000 } = req.body;
-    
+
     // Calculate base probabilities
     const probabilities = calculateBaseProbabilities(bey1, bey2);
     const probabilities2 = calculateBaseProbabilities(bey2, bey1);
@@ -122,53 +122,55 @@ function calculateKOChance(bey1: BuildStats, bey2: BuildStats) {
   const spinModifier = bey1.spin !== bey2.spin ? 1.2 : 1;
   const baseKO = attackDefenseRatio * 0.3 * weightFactor * typeModifier * spinModifier;
 
-  return Math.min(baseKO, 0.7);
+  return Math.max(0, Math.min(baseKO, 0.7));
 }
 
 function calculateBurstChance(bey1: BuildStats, bey2: BuildStats) {
   const burstDiff = bey2.burst - bey1.burst;
   const attackFactor = bey1.attack / 150;
-  return 0.2 + attackFactor * 0.5 - burstDiff * 0.005;
+  const burstChance = 0.2 + attackFactor * 0.5 - burstDiff * 0.005;
+
+  return Math.max(0, burstChance);
 }
 
 function calculateStaminaChance(bey1: BuildStats, bey2: BuildStats) {
   const staminaDiff = bey1.stamina - bey2.stamina;
   const weightFactor = bey1.weight / 150;
-  return 0.3 + staminaDiff * 0.01 + weightFactor * 0.2;
+  const staminaChance = 0.3 + staminaDiff * 0.01 + weightFactor * 0.2;
+
+  return Math.max(0, staminaChance);
 }
 
-
-
 // assymetric battle for future use
-    // for (let i = 0; i < iterations; i++) {
-    //   const random = Math.random();
+// for (let i = 0; i < iterations; i++) {
+//   const random = Math.random();
 
-    //   if (random < probabilities.ko) {
-    //     const koRoll = (bey1.attack / bey2.defense) * 0.7;
-    //     if (Math.random() < koRoll) {
-    //       results.bey1++;
-    //       outcomeDetails.bey1.KO++;
-    //     } else {
-    //       results.bey2++;
-    //       outcomeDetails.bey2.KO++;
-    //     }
-    //   } else if (random < probabilities.ko + probabilities.burst) {
-    //     const burstRoll = bey1.attack / 200 - bey2.burst / 200 + 0.3;
-    //     if (Math.random() < burstRoll) {
-    //       results.bey1++;
-    //       outcomeDetails.bey1.BURST++;
-    //     } else {
-    //       results.bey2++;
-    //       outcomeDetails.bey2.BURST++;
-    //     }
-    //   } else {
-    //     const staminaRoll = bey1.stamina / (bey1.stamina + bey2.stamina);
-    //     if (Math.random() < staminaRoll) {
-    //       results.bey1++;
-    //       outcomeDetails.bey1.OUTSPIN++;
-    //     } else {
-    //       results.bey2++;
-    //       outcomeDetails.bey2.OUTSPIN++;
-    //     }
-    //   }
-    // }
+//   if (random < probabilities.ko) {
+//     const koRoll = (bey1.attack / bey2.defense) * 0.7;
+//     if (Math.random() < koRoll) {
+//       results.bey1++;
+//       outcomeDetails.bey1.KO++;
+//     } else {
+//       results.bey2++;
+//       outcomeDetails.bey2.KO++;
+//     }
+//   } else if (random < probabilities.ko + probabilities.burst) {
+//     const burstRoll = bey1.attack / 200 - bey2.burst / 200 + 0.3;
+//     if (Math.random() < burstRoll) {
+//       results.bey1++;
+//       outcomeDetails.bey1.BURST++;
+//     } else {
+//       results.bey2++;
+//       outcomeDetails.bey2.BURST++;
+//     }
+//   } else {
+//     const staminaRoll = bey1.stamina / (bey1.stamina + bey2.stamina);
+//     if (Math.random() < staminaRoll) {
+//       results.bey1++;
+//       outcomeDetails.bey1.OUTSPIN++;
+//     } else {
+//       results.bey2++;
+//       outcomeDetails.bey2.OUTSPIN++;
+//     }
+//   }
+// }

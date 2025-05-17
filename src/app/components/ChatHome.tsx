@@ -42,7 +42,7 @@ const ChatHome = () => {
         body: JSON.stringify({ message }),
       });
 
-      if (!response.ok) throw new Error("Ollama didn't respond");
+      if (!response.ok) throw new Error('AI Chat was disabled by the owner during this time.');
 
       const data = await response.json();
       setChat((prev) => [...prev, `🤖: ${data.reply}`]);
@@ -56,7 +56,7 @@ const ChatHome = () => {
 
   return (
     <div className="w-full">
-      <div className="flex flex-col justify-center items-center py-4 w-full min-h-screen">
+      <div className="flex flex-col justify-center items-center py-4 w-full min-h-[90vh]">
         {chat.length === 0 && (
           <h1 className="mb-10 sm:mb-20 text-2xl text-center sm:text-5xl dark:text-white text-black">
             Ask Beyblade X Chat Assistant Anything
